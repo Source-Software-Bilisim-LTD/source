@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+#define A_SIZE 10
+ 
+void merge_sort(int *p, int size);
+void print_array(int *p, int size);
+ 
+ 
+int main(void)
+{
+   int a[A_SIZE] = {45, 4, 12, 56, 87, -6, 0, 587, -56, 4};
+ 
+   print_array(a, A_SIZE);
+   merge_sort(a, A_SIZE);
+   print_array(a, A_SIZE);
+   return 0;
+}
+/**************************************/
+void merge_sort (int *p, int size)
+{
+   int *t, *q, *buf;
+   int   left, len, count1, count2, source1, source2, dest;
+ 
+   if (size <= 1)
+      return;
+   buf = q = (int *) malloc(size * sizeof(int));
+   if (buf == NULL) {
+      printf("not enough memory!");
+      exit(EXIT_FAILURE);
+   }
+   len = 1;
+ 
+   do {
+      left = size;
+      source1 = dest = 0; source2 = len;
+      do {
+         left -= count1 = (left >= len) ? len : left;
+         left -= count2 = (left >= len) ? len : left;
+         while (count1 > 0 && count2 > 0) {
+            if (p[source1] < p[source2]) {
+               q[dest++] = p[source1++];
+               count1--;
+            }
+            else {
+               q[dest++] = p[source2++];
+               count2--;
+            }
+         }
+         while (--count1 >= 0)
+            q[dest++] = p[source1++];
+         while (--count2 >= 0)
+            q[dest++] = p[source2++];
+         source1 += len; source2 += len;
+      } while (left > 0);
+      t = p;
+      p = q;
+      q = t;
+      len *= 2;
+   } while (len < size);
+   if (p == buf)
+      while (--size >= 0)
+         q[size] = p[size];
+   free(buf);
+}
+/**************************************/
+void print_array(int *p, int size)
+{
+   int i;
+ 
+   for (i = 0; i < size; i++)
+      printf("%d ", p[i]);
+   putchar('\n');
+}
